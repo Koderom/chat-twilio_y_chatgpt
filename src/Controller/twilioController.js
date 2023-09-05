@@ -21,13 +21,17 @@ function getSender(originNumber){
 }
 
 twilioController.messageReceived = async (req, res) => {
-    const message = req.body.Body;
-    const sender = getSender(req.body.From);
-    const response = await chatGPT.query(message);
-    respond(response, sender);
+    try{
+        const message = req.body.Body;
+        const sender = getSender(req.body.From);
+        const response = await chatGPT.query(message);
+        respond(response, sender);
 
-    console.log(response);
-    res.status(200).send('mensaje recibido');
+        console.log(response);
+        res.status(200).send('mensaje recibido');
+    }catch(error){
+        res.status(403).send(error.message);
+    }
 }
 
 module.exports = {twilioController};
